@@ -3,3 +3,5 @@ The main challenge of the game is avoiding the poisoned mice, which are visually
 lack of a response when your owl character approaches.
 Use the return key to click through the introduction page, and use the arrow keys to control your owl character. The owl will automatically pick up the 
 first mouse it touches. Deliver the mice to your nest in the window of the barn.
+
+Credit for font: https://www.fontspace.com/black-north-font-f87052
