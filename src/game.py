@@ -30,12 +30,13 @@ class Game():
 
         youngMouseCollisions = pygame.sprite.groupcollide(self.youngGroup,self.mouseGroup,False,False)
         if youngMouseCollisions:
-            self.youngGroup.sprite.mouseCount += 1
             fedMouse = pygame.sprite.spritecollideany(self.youngGroup.sprite,self.mouseGroup)
             fedMouse.state = "dead"
             self.owlGroup.sprite.clawState = "empty"
             if fedMouse.poisoned:
                 self.youngGroup.sprite.health -= 1
+            else:
+                self.youngGroup.sprite.mouseCount += 1
 
 
     def update(self):
@@ -138,7 +139,8 @@ class Young(pygame.sprite.Sprite):
 
 
     def displayStats(self):
-        displayText("Mice caught: " + str(self.mouseCount),50,0,100,"left")
+        displayText("Catch 5 mice! ",30,20,50,"left")
+        displayText("Mice caught: " + str(self.mouseCount),50,20,100,"left")
 
     def update(self):
         if self.mouseCount <= 2:
@@ -235,6 +237,7 @@ ground = pygame.Surface((screenX,100))
 ground.fill("darkgreen")
 black = pygame.Surface((screenX,screenY))
 black.fill("black")
+titleImage = pygame.image.load("images/titleImage.png")
 
 #sprite groups
 owlGroup = pygame.sprite.GroupSingle()
@@ -257,9 +260,10 @@ while True:
             exit()
     if gameState == "start":
         screen.blit(black,(0,0))
+        screen.blit(titleImage,(screenX/2-100,screenY/2-300))
         displayText("Mousehunter",100,screenX/2,screenY/2,"center")
-        displayText("Hunt mice, feed them to your young",20,screenX/2,screenY/2+100,"center")
-        displayText("Poisoned mice move slow and will not flee, AVOID AT ALL COSTS",20,screenX/2,screenY/2+200,"center")
+        displayText("Catch 5 healthy mice, feed them to your young",30,screenX/2,screenY/2+100,"center")
+        displayText("Poisoned mice move slowly and will not flee, AVOID THESE AT ALL COSTS",30,screenX/2,screenY/2+200,"center")
 
         keys = pygame.key.get_pressed()
         if keys[pygame.K_RETURN]:
@@ -277,12 +281,22 @@ while True:
 
     elif gameState == "end":
         screen.blit(black,(0,0))
+        oneJuv = pygame.image.load("images/1juv.png")
+        twoJuv = pygame.image.load("images/2juv.png")
+        threeJuv = pygame.image.load("images/3juv.png")
 
-        displayText("You raised " + str(youngGroup.sprite.health) + " chicks!",50,screenX/2,screenY/2,"center")
+        displayText("You raised " + str(youngGroup.sprite.health) + " owls!",50,screenX/2,screenY/2,"center")
+        displayText("You lost " + str(3-(youngGroup.sprite.health)) + " owlets to rodenticide poisoning.",50,screenX/2,screenY/2+100,"center")
+        if youngGroup.sprite.health == 3:
+            screen.blit(threeJuv,(screenX/2-100,screenY/2-200))
+        elif youngGroup.sprite.health == 2:
+            screen.blit(twoJuv,(screenX/2-100,screenY/2-200))
+        elif youngGroup.sprite.health == 1:
+            screen.blit(oneJuv,(screenX/2-100,screenY/2-200))
 
         keys = pygame.key.get_pressed()
         if keys[pygame.K_RETURN]:
-            gameState = "playing"
+            gameState = "start"
 
     pygame.display.update()
     clock.tick(60)
